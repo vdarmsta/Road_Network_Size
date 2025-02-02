@@ -6,6 +6,7 @@ import sys
 def get_roads_from_overpass(commune_nom):
     """
     Récupère les routes d'une commune en Belgique depuis l'API Overpass.
+    Utilise les relations administratives pour identifier précisément la commune.
     """
     # Initialiser l'API Overpass
     api = overpy.Overpass()
@@ -13,7 +14,7 @@ def get_roads_from_overpass(commune_nom):
     # Requête Overpass pour récupérer les routes dans la commune en Belgique
     query = f"""
         area["name"="Belgique"]->.pays;
-        area["name"="{commune_nom}"](area.pays)->.commune;
+        rel["name"="{commune_nom}"]["admin_level"="8"](area.pays)->.commune;
         (
             way["highway"~"motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|track"]
             (area.commune);
